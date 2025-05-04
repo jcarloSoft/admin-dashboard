@@ -1,0 +1,84 @@
+:host {
+  display: block;
+  height: 100vh; // Altura completa
+  overflow-y: auto;
+  background-color: #2c2f36; // Fondo oscuro profesional
+}
+
+.sidebar-wrapper {
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+  box-shadow: inset 0 -5px 8px -4px rgba(0, 0, 0, 0.3); // Sombra interior suave
+}
+
+// ESTILO GENERAL DE LINKS
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  color: #cfd8dc;
+  transition: background-color 0.3s ease;
+  gap: 8px; // Espacio entre ícono y texto
+
+  i.nav-icon {
+    font-size: 1.2rem;
+    line-height: 1;
+    vertical-align: middle;
+    margin-top: 2px; // Alineación visual vertical
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+  }
+
+  &.active {
+    background-color: #0d6efd;
+    color: #ffffff;
+    font-weight: 600;
+  }
+}
+
+// ENCABEZADOS DE SECCIÓN
+.nav-header {
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.75rem 1rem 0.25rem;
+  color: #dee2e6;
+  gap: 0.5rem;
+
+  .nav-header-icon {
+    font-size: 1.1rem;
+    opacity: 0.8;
+    color: #adb5bd;
+  }
+}
+
+// SUBMENÚS
+.nav-treeview {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  padding-left: 1rem;
+}
+
+.nav-item.open > .nav-treeview {
+  max-height: 500px;
+  transition: max-height 0.4s ease-in;
+}
+
+// FLECHAS DE DESPLIEGUE
+.nav-item .bi-chevron-down {
+  transition: transform 0.3s ease;
+}
+
+.nav-item.open .bi-chevron-down {
+  transform: rotate(180deg);
+}

@@ -1,0 +1,189 @@
+<div class="container-fluid px-4">
+  <!-- Encabezado con filtro -->
+  <div
+    class="d-flex justify-content-between align-items-center flex-wrap gap-3 my-4"
+  >
+    <div>
+      <h2 class="fw-semibold text-dark mb-1">
+        <i class="bi bi-cart-check-fill me-2 text-primary"></i> Gestión de
+        Pedidos
+      </h2>
+      <p class="text-muted fs-6 mb-0">
+        Listado de pedidos agrupados por cliente.
+      </p>
+    </div>
+
+    <div class="d-flex align-items-center gap-2">
+      <input
+        type="text"
+        class="form-control search-input"
+        placeholder="Buscar cliente..."
+        [(ngModel)]="filtroCliente"
+        (ngModelChange)="updatePagination()"
+      />
+      <button
+        class="btn btn-nuevo-categoria d-flex align-items-center gap-2 shadow-sm"
+        [routerLink]="['/orders/create']"
+      >
+        <span class="icon-circle">
+          <i class="bi bi-plus text-primary"></i>
+        </span>
+        <span class="fw-semibold">Nuevo Pedido</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Agrupación de pedidos por cliente -->
+  <ng-container *ngFor="let cliente of paginatedGroupedOrders">
+    <div class="card border-0 shadow-sm mb-3">
+      <!-- Cabecera -->
+      <div
+        class="card-header bg-white d-flex justify-content-between align-items-center"
+      >
+        <div class="d-flex align-items-center gap-3">
+          <button
+            class="btn btn-sm btn-light border"
+            (click)="toggleCollapse(+cliente[0])"
+            title="Expandir/Colapsar"
+          >
+            <i
+              class="bi"
+              [ngClass]="{
+                'bi-chevron-down': !isCollapsed(+cliente[0]),
+                'bi-chevron-right': isCollapsed(+cliente[0])
+              }"
+            ></i>
+          </button>
+          <i class="bi bi-person-fill text-primary fs-4"></i>
+          <span class="fs-5 fw-bold text-dark">
+            {{ getCustomerName(+cliente[0]) }}
+          </span>
+          <span
+            *ngIf="hasPending(cliente[1])"
+            class="badge rounded-pill bg-danger-subtle text-danger"
+          >
+            <i class="bi bi-exclamation-circle-fill me-1"></i>
+            Pendiente: S/ {{ getPendingAmount(cliente[1]) | number : "1.2-2" }}
+          </span>
+        </div>
+
+        <!-- Alinear correctamente el botón "Ver Detalles" -->
+        <div class="ms-auto">
+          <button
+            class="btn btn-sm d-flex align-items-center gap-2 px-3 py-1 fw-semibold shadow-sm border border-primary-subtle text-primary bg-light"
+            (click)="openCustomerOrders(+cliente[0])"
+            style="border-radius: 0.375rem; transition: all 0.2s ease-in-out"
+            onmouseover="this.classList.add('bg-primary', 'text-white')"
+            onmouseout="this.classList.remove('bg-primary', 'text-white')"
+          >
+            <i class="bi bi-eye-fill"></i> Ver Detalles
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabla -->
+      <div class="table-responsive" *ngIf="!isCollapsed(+cliente[0])">
+        <table class="table table-sm table-hover align-middle text-sm mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Campaña</th>
+              <th>Sesión</th>
+              <th>Apertura</th>
+              <th>Total</th>
+              <th>Real a Pagar</th>
+              <th>Estado</th>
+              <th>Preferencia</th>
+              <th>Registro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of cliente[1]">
+              <td class="text-muted">#{{ order.id }}</td>
+              <td>{{ getCampaignName(order.campaignId) }}</td>
+              <td>{{ getSessionTitle(order.liveSessionId) }}</td>
+              <td>
+                {{
+                  order.apertura !== null
+                    ? "S/ " + (order.apertura | number : "1.2-2")
+                    : "-"
+                }}
+              </td>
+              <td>S/ {{ order.totalAmount | number : "1.2-2" }}</td>
+              <td>
+                <span
+                  [ngClass]="{
+                    'text-success fw-semibold': order.realAmountToPay === 0,
+                    'text-danger fw-semibold': order.realAmountToPay > 0
+                  }"
+                >
+                  S/ {{ order.realAmountToPay | number : "1.2-2" }}
+                </span>
+              </td>
+              <td>
+                <span
+                  class="badge bg-success"
+                  *ngIf="order.status === 'PAGADO'"
+                >
+                  Pagado
+                </span>
+                <span
+                  class="badge bg-warning text-dark"
+                  *ngIf="order.status === 'NO_PAGADO'"
+                  >No Pagado</span
+                >
+              </td>
+              <td>
+                <span
+                  *ngIf="order.accumulation"
+                  class="badge bg-primary-subtle text-primary"
+                >
+                  <i class="bi bi-box-seam me-1"></i> Acumular
+                </span>
+                <span
+                  *ngIf="!order.accumulation"
+                  class="badge bg-success-subtle text-success"
+                >
+                  <i class="bi bi-truck me-1"></i> Enviar
+                </span>
+              </td>
+              <td>{{ order.createdAt | date : "short" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Paginador visible y centrado -->
+  <div class="d-flex justify-content-center mt-4" *ngIf="totalPages > 1">
+    <nav>
+      <ul class="pagination pagination-sm mb-0">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link" href="#" (click)="goToPage(currentPage - 1)"
+            >‹</a
+          >
+        </li>
+        <li
+          class="page-item"
+          *ngFor="let page of [].constructor(totalPages); let i = index"
+          [class.active]="currentPage === i + 1"
+        >
+          <a class="page-link" href="#" (click)="goToPage(i + 1)">{{
+            i + 1
+          }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <a class="page-link" href="#" (click)="goToPage(currentPage + 1)"
+            >›</a
+          >
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Sin pedidos -->
+  <div *ngIf="orders.length === 0" class="alert alert-light text-center mt-5">
+    <i class="bi bi-inbox-fill me-2"></i> No hay pedidos registrados.
+  </div>
+</div>

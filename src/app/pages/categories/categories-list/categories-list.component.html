@@ -1,0 +1,207 @@
+<div class="container-fluid px-4">
+  <!-- Encabezado -->
+  <div class="d-flex justify-content-between align-items-center my-4">
+    <div>
+      <h2 class="fw-semibold text-dark mb-1">
+        <i class="bi bi-tags-fill me-2 text-silmaur2"></i>
+        Gestión de Categorías
+      </h2>
+      <p class="text-muted mb-0 fs-6">
+        Administra las categorías registradas en el sistema.
+      </p>
+    </div>
+    <button
+      class="btn btn-nuevo-categoria d-flex align-items-center gap-2 shadow-sm"
+      (click)="openNewCategoryModal()"
+    >
+      <span class="icon-circle">
+        <i class="bi bi-plus text-primary"></i>
+      </span>
+      <span class="fw-semibold">Nueva Categoría</span>
+    </button>
+  </div>
+
+  <!-- Buscador -->
+  <div class="input-group mb-4 shadow-sm rounded">
+    <span class="input-group-text bg-white border-end-0 rounded-start">
+      <i class="bi bi-search text-primary fs-5"></i>
+    </span>
+    <input
+      type="text"
+      class="form-control border-start-0 border-end-0"
+      placeholder="Buscar categoría por nombre"
+      [(ngModel)]="searchQuery"
+      (input)="filterCategories()"
+      style="font-size: 0.9rem"
+    />
+    <button
+      *ngIf="searchQuery"
+      class="btn btn-outline-secondary border-start-0 rounded-end"
+      (click)="searchQuery = ''; filterCategories()"
+    >
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <!-- Tabla de Categorías -->
+  <div class="card shadow border-0 fade-in-top">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table
+          class="table table-hover table-striped align-middle mb-0 text-sm"
+        >
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Nombre</th>
+              <th>Descripción</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cat of filteredCategories; let i = index">
+              <td class="text-muted">
+                {{ (currentPage - 1) * pageSize + i + 1 }}
+              </td>
+              <td class="fw-semibold text-silmaur2">{{ cat.name }}</td>
+              <td>{{ cat.description || "—" }}</td>
+              <td class="text-center">
+                <button
+                  class="btn btn-outline-info btn-sm me-1"
+                  (click)="editCategory(cat)"
+                  title="Editar categoría"
+                >
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+                <button
+                  class="btn btn-outline-danger btn-sm"
+                  (click)="deleteCategory(cat)"
+                  title="Eliminar categoría"
+                >
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="filteredCategories.length === 0">
+              <td colspan="4" class="text-center text-muted py-4">
+                <i class="bi bi-exclamation-circle me-2 text-warning"></i>
+                No hay categorías registradas.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+  <!-- Paginación centrada y personalizada -->
+  <div class="pagination-silmaur">
+    <button
+      class="page-link"
+      [disabled]="currentPage === 1"
+      (click)="previousPage()"
+    >
+      Anterior
+    </button>
+
+    <ng-container *ngFor="let page of totalPagesArray">
+      <button
+        class="page-link"
+        [class.active]="page === currentPage"
+        (click)="goToPage(page)"
+      >
+        {{ page }}
+      </button>
+    </ng-container>
+
+    <button
+      class="page-link"
+      [disabled]="currentPage === totalPages"
+      (click)="nextPage()"
+    >
+      Siguiente
+    </button>
+  </div>
+</div>
+
+<!-- Modal: Crear / Editar Categoría -->
+<div
+  class="modal fade"
+  id="categoryModal"
+  tabindex="-1"
+  aria-labelledby="categoryModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow border-0 rounded-3">
+      <form [formGroup]="categoryForm" (ngSubmit)="submitCategory()">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="categoryModalLabel">
+            <i
+              class="bi"
+              [ngClass]="
+                isEditMode ? 'bi-pencil-square' : 'bi-plus-circle-fill'
+              "
+            ></i>
+            {{ isEditMode ? "Editar Categoría" : "Nueva Categoría" }}
+          </h5>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            data-bs-dismiss="modal"
+            aria-label="Cerrar"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label fw-semibold"
+              >Nombre <span class="text-danger">*</span></label
+            >
+            <input
+              type="text"
+              class="form-control shadow-sm"
+              formControlName="name"
+              placeholder="Nombre de la categoría"
+            />
+            <div
+              class="text-danger small mt-1"
+              *ngIf="
+                categoryForm.get('name')?.touched &&
+                categoryForm.get('name')?.invalid
+              "
+            >
+              Nombre es obligatorio.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Descripción</label>
+            <textarea
+              class="form-control shadow-sm"
+              formControlName="description"
+              rows="2"
+              placeholder="Descripción (opcional)"
+            ></textarea>
+          </div>
+        </div>
+        <div class="modal-footer bg-light rounded-bottom">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="btn btn-success"
+            [disabled]="categoryForm.invalid"
+          >
+            <i class="bi bi-check2-circle me-1"></i>
+            {{ isEditMode ? "Actualizar" : "Guardar" }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

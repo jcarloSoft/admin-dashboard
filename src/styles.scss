@@ -1,0 +1,100 @@
+@import "src/assets/adminlte/css/adminlte.min.css";
+
+// 🎨 Paleta SILMAUR
+:root {
+  --silmaur-blue: #183d54;
+  --silmaur-orange: #f7941e;
+  --silmaur-gray: #f0f2f5;
+}
+
+// 🧩 Utilidades
+body {
+  background-color: var(--silmaur-gray);
+  font-family: "Roboto", sans-serif;
+}
+
+// 🔵 Colores
+.text-silmaur {
+  color: var(--silmaur-blue) !important;
+}
+
+.text-orange {
+  color: var(--silmaur-orange) !important;
+}
+
+.bi-orange {
+  color: var(--silmaur-orange) !important;
+}
+
+.bg-silmaur {
+  background-color: var(--silmaur-blue) !important;
+  color: #fff;
+}
+
+// 🧩 Icon-Label estilo Pro
+.icon-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+  color: #212529;
+}
+
+// 💠 Botón personalizado
+.btn-silmaur {
+  background-color: var(--silmaur-orange) !important;
+  color: #fff !important;
+  border: none;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.btn-silmaur:hover {
+  background-color: #db831a !important;
+  color: #fff;
+}
+
+// 📦 Tabla
+.table thead th {
+  background-color: var(--silmaur-blue);
+  color: #fff;
+  vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(24, 61, 84, 0.08);
+}
+
+// 🖼️ Imagen de vista previa
+.image-preview {
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+// 🟦 Encabezado personalizado
+.card-header.bg-primary {
+  background-color: var(--silmaur-blue) !important;
+  color: #fff !important;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+/* Puedes agregar esto a styles.scss o el archivo del componente */
+
+.text-shadow-strong {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5), 0 0 1px rgba(0, 0, 0, 0.4);
+}
+
+.bg-silmaur {
+  background-color: #183d54 !important; /* azul oscuro */
+}
+
+.bg-silmaur-orange {
+  background-color: #f7941e !important; /* naranja vibrante */
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  color: #3c4858; // o ajusta al tono deseado
+  font-weight: 500;
+}

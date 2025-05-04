@@ -1,0 +1,93 @@
+<div class="container py-4 fade-in-top">
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-primary text-white d-flex align-items-center">
+      <i class="bi bi-pencil-square me-2 fs-5"></i>
+      <h5 class="mb-0">Editar Cliente</h5>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control" formControlName="name" />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Documento</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="documentId"
+            />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Teléfono</label>
+            <input type="text" class="form-control" formControlName="phone" />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Correo electrónico</label>
+            <input type="email" class="form-control" formControlName="email" />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">TikTok</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="nickTiktok"
+            />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Apertura (S/)</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="initialDeposit"
+            />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Preferencia de Envío</label>
+            <select class="form-select" formControlName="shippingPreference">
+              <option value="ACCUMULATE">Acumular</option>
+              <option value="SHIP">Enviar</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button
+            type="button"
+            class="btn btn-outline-secondary d-flex align-items-center gap-1 px-3"
+            (click)="onCancel()"
+            title="Volver sin guardar cambios"
+          >
+            <i class="bi bi-x-circle"></i> Cancelar
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-primary d-flex align-items-center gap-2 px-3"
+            [disabled]="!isModified() || isSubmitting"
+            title="Guardar los cambios realizados"
+          >
+            <ng-container *ngIf="!isSubmitting; else loading">
+              <i class="bi bi-check-circle-fill"></i> Actualizar Cliente
+            </ng-container>
+            <ng-template #loading>
+              <span
+                class="spinner-border spinner-border-sm text-white"
+                role="status"
+              ></span>
+              Guardando...
+            </ng-template>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

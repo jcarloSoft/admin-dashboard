@@ -1,0 +1,87 @@
+.table thead th {
+  white-space: nowrap;
+  font-size: 0.875rem;
+}
+
+.table td {
+  vertical-align: middle;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.table th {
+  vertical-align: middle;
+}
+.bi-cash-coin {
+  position: relative;
+  top: 1px; // ajusta según tu fuente
+}
+
+.card {
+  border-radius: 0.5rem;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f8f9fa !important;
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* styles.scss o client-list.component.scss */
+.modal-header.bg-danger {
+  background-color: #dc3545 !important; // rojo Bootstrap
+  color: white;
+  border-bottom: none;
+}
+
+.btn-danger-soft {
+  background-color: #f8d7da;
+  color: #842029;
+  border: 1px solid #f5c2c7;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-danger-soft:hover {
+  background-color: #e6aeb3;
+  color: white;
+}
+
+/* Animación de zoom al abrir el modal */
+@keyframes bounceInModal {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.modal.show .modal-dialog {
+  animation: bounceInModal 0.5s ease;
+}
+
+.search-container {
+  transition: box-shadow 0.3s ease;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+
+  input:focus {
+    box-shadow: none;
+    border-color: #0d6efd;
+  }
+
+  .btn-outline-secondary:hover {
+    background-color: #f8f9fa;
+  }
+
+  i.bi-search {
+    font-size: 1rem;
+  }
+}
